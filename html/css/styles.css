@@ -1,0 +1,516 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    display: block;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f4f4f9;
+}
+/*横並びの選択肢 */
+.liner_str {
+    margin-top: 15px; /* 上の余白 */
+    font-size: 14px; /* フォントサイズ */
+    color: #555555; /* テキスト色 */
+}
+
+/* 横並び選択肢のa */
+.liner_str a {
+    color: #007bff; /* リンクの色 */
+    text-decoration: none; /* 下線なし */
+    display: inline-block;
+}
+
+.liner_str a:hover {
+    text-decoration: underline; /* ホバー時に下線 */
+}
+/* メニュー全体のスタイル */
+.sidebar {
+    width: 200px;
+    background-color: #2c3e50;
+    color: white;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    transform: translateX(-160px); /* 初期状態で非表示 */
+    transition: transform 0.5s ease;
+}
+.sidebar h2 {
+    margin: 20px;
+    text-align: center;
+}
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.sidebar ul li {
+    margin: 15px 20px;
+}
+.sidebar ul li a {
+    color: white;
+    text-decoration: none;
+    font-size: 16px;
+}
+.sidebar ul li a:hover {
+    text-decoration: underline;
+}
+
+/* サイドバー内のメニューアイコンのスタイル */
+.sidebar .menu-icon {
+    position: absolute; /* サイドバー内で絶対配置 */
+    top: 20px; /* 上からの距離 */
+    right: 10px; /* サイドバー右端に配置 */
+    color: white; /* 色を白に */
+    font-size: 24px; /* アイコンのサイズ */
+    cursor: pointer; /* クリックできるようポインター表示 */
+    z-index: 1001; /* サイドバー内で最前面 */
+}
+
+/* コンテンツエリア */
+.content {
+    margin-left: 40px; /* メニューが非表示の時 */
+    padding: 20px;
+    transition: margin-left 0.5s ease;
+}
+
+/* メニューが表示された時のスタイル */
+.sidebar.visible {
+    transform: translateX(0);
+}
+.content.show {
+    margin-left: 200px;
+}
+
+
+/* login.css */
+
+/* ログインコンテナ */
+.login-container {
+    background-color: #ffffff; /* 背景色 */
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 影 */
+    width: 300px; /* 幅 */
+    text-align: center; /* テキストを中央揃え */
+    position: absolute; /* 画面中央に配置するため */
+    top: 50%; /* 親要素の高さの50% */
+    left: 50%; /* 親要素の幅の50% */
+    transform: translate(-50%, -50%); /* 要素の中心を基準に移動 */
+}
+
+/* タイトル */
+.login-container h1 {
+    margin-bottom: 20px;
+    font-size: 24px;
+    color: #333333; /* テキスト色 */
+}
+
+.login-container h2{
+    font-size: 15px;
+    color: #333333;
+}
+
+/* フォームのスタイル */
+.login-container form {
+    margin-bottom: 20px; /* フォーム間のスペース */
+}
+
+/* 入力フィールド */
+.login-container input[type="text"],
+.login-container input[type="password"] {
+    width: 80%; /* 幅 */
+    padding: 6px; /* 内側の余白 */
+    margin: 7px 0; /* 外側の余白 */
+    border: 1px solid #6f6b6b; /* 枠線 */
+    border-radius: 6px; /* 角の丸み */
+}
+
+/* ボタンのスタイル */
+.login-container button {
+    width: 50%; /* 幅 */
+    padding: 5px; /* 内側の余白 */
+    margin-top: 5px; /* 上の余白 */
+    background-color: #007bff; /* ボタンの背景色 */
+    color: #ffff; /* テキスト色 */
+    border: none; /* 枠線なし */
+    border-radius: 9px; /* 角の丸み */
+    cursor: pointer; /* カーソルをポインターに */
+    transition: background-color 0.3s ease; /* ホバー時のアニメーション */
+}
+
+/* ボタンホバー時のスタイル */
+.login-container button:hover {
+    background-color: #0056b3; /* ホバー時の背景色 */
+}
+
+
+.sign_up {
+    display: none; /* 初期状態で非表示 */
+}
+
+.sign_up.show {
+    display: block; /* 表示時にブロック要素として表示 */
+}
+
+/* フィギュアサムネイル関連のスタイル */
+.figure-sort {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.figure-thumbnails {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.figure-thumbnail {
+    width: 200px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: transform 0.3s ease;
+}
+
+.figure-thumbnail:hover {
+    transform: scale(1.05);
+}
+
+.figure-thumbnail img {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+}
+
+.figure-thumbnail .figure-info {
+    padding: 10px;
+    text-align: center;
+}
+
+.figure-thumbnail .figure-info h3 {
+    margin: 0 0 10px 0;
+    font-size: 16px;
+}
+
+.figure-thumbnail .figure-info p {
+    margin: 0;
+    color: #666;
+}
+
+/* 入力フィールドのスタイル */
+.search-input{
+    padding: 5px; /* 内側の余白 */
+    margin: 5px 0; /* 外側の余白 */
+    border: 1px solid #ccc; /* 枠線 */
+    transition: border-color 0.3s; /* 枠線の色の変化 */
+}
+
+.search-input:focus {
+    border-color: #007bff; /* フォーカス時の枠線の色 */
+    outline: none; /* デフォルトのアウトラインを消す */
+}
+
+/* ボタンのスタイル */
+.search-button {
+    background-color: #007bff; /* ボタンの背景色 */
+    color: #ffffff; /* ボタンのテキスト色 */
+    padding: 10px 15px; /* 内側の余白 */
+    border: none; /* 枠線なし */
+    border-radius: 5px; /* 角の丸み */
+    cursor: pointer; /* ポインター表示 */
+    transition: background-color 0.3s; /* ホバー時のアニメーション */
+}
+
+.search-button:hover {
+    background-color: #0056b3; /* ホバー時の背景色 */
+}
+
+/* テーブルのスタイル */
+table {
+    width: 70%; 
+    border-collapse: collapse; /* ボーダーの重なりを解消 */
+    margin-bottom: 20px; /* 下の余白 */
+}
+
+th ,td{
+    padding: 3px;
+    text-align: left; /* 左揃え */
+    border: 1px solid #ddd; /* 枠線 */
+}
+
+th {
+    background-color: #f2f2f2; /* ヘッダーの背景色 */
+    font-weight: bold; /* 太字 */
+}
+
+tr:nth-child(even) {
+    background-color: #f9f9f9; /* 偶数行の背景色 */
+}
+
+tr:hover {
+    background-color: #f1f1f1; /* ホバー時の背景色 */
+}
+
+.figure_form {
+    display: none;
+}
+
+.figure_form.show {
+    display: block;
+}
+
+#memo {
+    width: 300px; /* 幅を大きくする */
+    height: 70px; /* 高さも調整 */
+    padding: 10px;
+}
+
+.figure-list {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.figure-item {
+    display: flex;
+    background-color: #fff;
+    margin-bottom: 20px;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.figure-image {
+    width: 150px;
+    height: 150px;
+    border-radius: 8px;
+    margin-right: 20px;
+}
+
+.figure-details {
+    flex-grow: 1;
+}
+
+.figure-name {
+    margin: 0;
+    font-size: 1.5em;
+    color: #333;
+}
+
+.figure-details p{
+    margin: 5px 0;
+    color: #555;
+}
+.figure-details label{
+    margin: 5px 0;
+    color: #555;
+}
+.figure-details span {
+    font-weight: bold;
+}
+
+.pagination {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.pagination form {
+    display: flex;
+}
+
+.pagination button {
+    padding: 8px 12px;
+    margin: 0 4px;
+    border: 1px solid #ddd;
+    background-color: #fff;
+    color: #333;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.pagination button:hover {
+    background-color: #007bff;
+    color: #fff;
+}
+
+.pagination button.active {
+    background-color: #007bff;
+    color: #fff;
+}
+
+.pagination button:disabled {
+    background-color: #e9e9e9;
+    color: #999;
+    cursor: not-allowed;
+}
+
+/* 重心のラジオボタンと投票ボタンを一行に並べる */
+.vote-form {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+/* お気に入りボタンを一行に */
+.favorite-form {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.vote-form label {
+    display: inline-block;
+    font-size: 14px;
+    color: #333;
+}
+
+/* 投票ボタンのスタイル */
+.vote-button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 8px 12px;
+    margin-top: 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.vote-button:hover {
+    background-color: #0056b3;
+}
+
+.favorite-button {
+    background-color: #ff9800;
+}
+
+.favorite-button:hover {
+    background-color: #e67e22;
+}
+
+.Element_vertical {
+    display: flex; /* フレックスボックスを使用 */
+    align-items: center; /* 垂直方向の中央揃え */
+}
+
+.Element_vertical label {
+    margin-right: 10px; /* labelとformの間にスペースを追加 */
+}
+
+/* 棒グラフ全体のレイアウトを変更 */
+.bar-chart-vertical {
+    display: flex;
+    justify-content: space-around;
+    align-items: flex-end;
+    height: 200px;
+    margin-top: 20px;
+    border-left: none;
+    border-bottom: none;
+    padding: 10px 0;
+}
+
+/* 各棒グラフのスタイル */
+.bar {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    width: 40px;
+    height: 180px;
+    margin: 0 1px;
+}
+
+/* 棒の中身（投票数を視覚化） */
+.bar-inner {
+    width: 100%;
+    background-color: #aab3bd;
+    color: #fff;
+    text-align: center;
+    border-radius: 4px 4px 0 0;
+    transition: height 0.5s ease;
+}
+
+/* ラベルの位置調整 */
+.bar input {
+    margin-top: 5px;
+    font-weight: bold;
+    text-align: end;
+}
+
+.bar label  {
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+.bar p {
+    font-weight: bold;
+    font-size: 14px;
+}
+
+/* 入力フィールドのスタイル */
+.register-input{
+    padding: 5px; /* 内側の余白 */
+    margin: 5px 0; /* 外側の余白 */
+    border: 1px solid #ccc; /* 枠線 */
+    transition: border-color 0.3s; /* 枠線の色の変化 */
+}
+
+.register-input:focus {
+    border-color: #007bff; /* フォーカス時の枠線の色 */
+    outline: none; /* デフォルトのアウトラインを消す */
+}
+
+/* ボタンのスタイル */
+.register-button {
+    background-color: #007bff; /* ボタンの背景色 */
+    color: #ffffff; /* ボタンのテキスト色 */
+    padding: 10px 15px; /* 内側の余白 */
+    border: none; /* 枠線なし */
+    border-radius: 5px; /* 角の丸み */
+    cursor: pointer; /* ポインター表示 */
+    transition: background-color 0.3s; /* ホバー時のアニメーション */
+    margin-top: 5px;
+}
+
+/* 入力フィールドのスタイル */
+.master-input{
+    padding: 5px; /* 内側の余白 */
+    margin: 5px 0; /* 外側の余白 */
+    border: 1px solid #ccc; /* 枠線 */
+    transition: border-color 0.3s; /* 枠線の色の変化 */
+}
+
+.master-input:focus {
+    border-color: #007bff; /* フォーカス時の枠線の色 */
+    outline: none; /* デフォルトのアウトラインを消す */
+}
+
+.master-container form{
+    display: flex; /* フレックスボックスを使用 */
+    justify-content: flex-end; /* 右寄せ */
+    margin-top: 2px; /* 上に少し余白を追加 */
+    position: relative;
+    width: 70%;
+    padding-bottom: 50px;
+}
+
+.master-container form #masterbutton-container {
+    position: absolute; /* フォーム内で右下に配置 */
+    bottom: 10px; /* フォームの底から10px */
+    right: 10px; /* フォームの右端から10px */
+    display: flex; /* ボタンを横並びに */
+    gap: 10px; /* ボタン間の間隔 */
+}
+/* ボタンのスタイル */
+.master-button {
+    background-color: #007bff; /* ボタンの背景色 */
+    color: #ffffff; /* ボタンのテキスト色 */
+    padding: 7px 10px; /* 内側の余白 */
+    border: none; /* 枠線なし */
+    border-radius: 5px; /* 角の丸み */
+    cursor: pointer; /* ポインター表示 */
+    transition: background-color 0.3s; /* ホバー時のアニメーション */
+    margin-left: 1px;
+}

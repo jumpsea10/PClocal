@@ -1,38 +1,45 @@
 <?php
+session_start();
 include_once("/var/www/html/inc/function.inc");
 include_once("/var/www/html/inc/def.inc");
 $is_exist = 0;
-if (isset($_GET['ac_key'])) {
-    $ac_key = mysqli_real_escape_string($con,$_GET['ac_key']);
-    $rst = mysql_query("select * from operator where ac_key = '$ac_key'");
-    if ($usr = mysqli_fetch_assoc($rst)) {
+if (isset($_SESSION['operator_ac_key'])) {
+    $ac_key = $_SESSION['operator_ac_key'];
+    $rst = mysql_query("SELECT * FROM operator WHERE operator_ac_key = '$ac_key'");
+    if ($rst->num_rows > 0) {
+        $usr = mysqli_fetch_assoc($rst);
         $is_exist = 1;
     }
+}
+if ($is_exist === 0) {
+    $_SESSION['login_err'] = "*再ログインしてください";
+    header('Location: '. $_ENV['URL_MASTER_LOGIN']);
+    exit();
 }
 
 if (isset($_POST["way"])) {
     $way = $_POST["way"];
-    if ($way === 1) {
-        mysql_query("update figure_request set is_ok = 1 where request_id = '{$_POST["request_id"]}'");
-    } else if($way === 2) {
+    if ($way === '1') {
+        mysql_query("UPDATE figure_request SET is_ok = 1 WHERE request_id = '{$_POST["request_id"]}'");
+    } else if($way === '2') {
         $i = $_POST['i'];
         setcookie('anime_name',$_POST['anime_name'.$i]);
         setcookie('figure_name',$_POST['figure_name'.$i]);
         setcookie('maker_name',$_POST['maker_name'.$i]);
-        mysql_query("update figure_request set is_ok = 1 where request_id = '{$_POST["request_id"]}'");
-        header('Location: '.$_ENV['URL_MASTER_INDEX'].'?ac_key='.$ac_key);
+        mysql_query("UPDATE figure_request SET is_ok = 1 WHERE request_id = '{$_POST["request_id"]}'");
+        header('Location: '. $_ENV['URL_MASTER_INDEX']);
         exit();
     }
 }
 
-$rst = mysql_query("select * from figure_request where is_ok = 0");
+$rst = mysql_query("SELECT * FROM figure_request WHERE is_ok = 0");
 ?>
 <!DOCTYPE html>
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>index of prize figures</title>
+    <title>ぷらいずせんたー</title>
     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
@@ -45,12 +52,13 @@ $rst = mysql_query("select * from figure_request where is_ok = 0");
     ☰
     </div>
     <ul>
-        <li><a href="<?=$_ENV['URL_MASTER_INDEX']?>?ac_key=<?=$ac_key?>">フィギュア登録</a></li>
+        <li><a href="<?=$_ENV['URL_MASTER_INDEX']?>">フィギュア登録</a></li>
+        <li><a href="<?=$_ENV['URL_MASTER_LOGIN']?>">ログアウト</a></li>
     </ul>
 </div>
 
 <div class="content" id="content">
-        <h1 id="top">リクエスト登録</h1>
+        <h1 id="top">管理者 リクエスト登録</h1>
         <?php
         $i=1; 
         while ($col = mysqli_fetch_assoc($rst)) { ?>

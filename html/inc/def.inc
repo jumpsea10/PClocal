@@ -23,6 +23,5 @@ $_gravity_to_english = array(
     "裏上" => "up_back",
     "裏中" => "center_back",
     "裏下" => "down_back",
-
 )
 ?>

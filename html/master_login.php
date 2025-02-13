@@ -1,16 +1,17 @@
 <?php
 session_start();
-include_once("inc/login_head.inc");
-$login_error_msg = $_SESSION['login_error'] ?? null;
-unset($_SESSION['login_error']); 
-$previousPage = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '#';
+include_once("/var/www/html/inc/def.inc");
+include_once("/var/www/html/inc/function.inc");
+$login_error_msg = $_SESSION['login_err'] ?? null;
+unset($_SESSION['login_err']); 
+unset($_SESSION['operator_ac_key']);
 ?>
 <!DOCTYPE html>
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>index of prize figures/管理者ログイン</title>
+    <title>ぷらいずせんたー/管理者ログイン</title>
     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>

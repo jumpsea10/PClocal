@@ -1,20 +1,28 @@
 <?php
-include_once("inc/head.inc");
+session_start();
+include_once("./inc/def.inc");
+include_once("./inc/function.inc");
 $is_exist = 0;
-if (isset($_GET['ac_key'])) {
-    $ac_key = mysqli_real_escape_string($con,$_GET['ac_key']);
-    $rst = mysql_query("select * from operator where ac_key = '$ac_key'");
-    if ($usr = mysqli_fetch_assoc($rst)) {
+if (isset($_SESSION['operator_ac_key'])) {
+    $ac_key = $_SESSION['operator_ac_key'];
+    $rst = mysql_query("SELECT * FROM operator WHERE operator_ac_key = '$ac_key'");
+    if ($rst->num_rows > 0) {
+        $usr = mysqli_fetch_assoc($rst);
         $is_exist = 1;
     }
+}
+if ($is_exist === 0) {
+    $_SESSION['login_err'] = '*再ログインしてください';
+    header("Location: ". $_ENV['URL_MASTER_LOGIN']);
+    exit();
 }
 
 //フィギュアの登録処理
 $is_register = 0;
 $is_register = $_POST['register'] ?? 0;
-if(isset($_POST['register'])){
-    $i=1;
-    while(isset($_POST['figure_name'.$i])){
+if (isset($_POST['register'])) {
+    $i = 1;
+    while (isset($_POST['figure_name'.$i])) {
         $name = isset($_POST['figure_name']) ? $_POST['figure_name'] : null;
         $anime = isset($_POST['anime_name']) ? $_POST['anime_name'] : '';
         $maker = isset($_POST['maker']) ? $_POST['maker'] : null;
@@ -22,13 +30,13 @@ if(isset($_POST['register'])){
         $salling_price = isset($_POST['salling_price']) ? $_POST['salling_price'] : null;
         $buying_price = isset($_POST['buying_price']) ? $_POST['buying_price'] : null;
         $maker = isset($_POST['maker']) ? $_POST['maker'] : null;
-        $figure_id = mysql_query("insert into figure (name,anime,maker,sale_date,salling_price,buying_price,image_filepath) values ('$name','$anime','$maker','$sale_date','$salling_price','$buying_price','$image_filepath')");
+        $figure_id = mysql_query("INSERT INTO figure (name,anime,maker,sale_date,salling_price,buying_price,image_filepath) VALUES ('$name','$anime','$maker','$sale_date','$salling_price','$buying_price','$image_filepath')");
 
         $year = date("Y",strtotime($sale_date));
         $month = date("m",strtotime($sale_date));
         $dir = "/var/www/img";
-        if(!isdir($dir.'/'.$year.'/'.$month)){
-            if(!isdir($dir.'/'.$year)){
+        if (!isdir($dir.'/'.$year.'/'.$month)) {
+            if (!isdir($dir.'/'.$year) ){
                 $newdir = $dir. '/'.$year; 
                 mkdir($newdir,0777,true);
             }
@@ -39,15 +47,22 @@ if(isset($_POST['register'])){
         $file_path = $newdir.'/'.$file_name;
         move_upload_file($_FILES['temp_name'],$file_path);
         $update_path = '/img'.'/'.$year.'/'.$month.'/'.$file_name;
-        mysql_query("update figure set file_path = '{$update_path}' where figure_id = '{$figure_id}'");
+        mysql_query("UPDATE figure SET file_path = '{$update_path}' WHERE figure_id = '{$figure_id}'");
         $i++;
     }
 }   
-
 $cnt=1;
 
-
 ?>
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ぷらいずせんたー/管理者</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
 <!-- 左側のメニュー -->
 <div class="sidebar" id="sidebar" style="background-color: #ff9800;">
     <h2>メニュー</h2>
@@ -56,8 +71,9 @@ $cnt=1;
     ☰
     </div>
     <ul>
-        <li><a href="<?=$_ENV['URL_MASTER_REQUEST']?><?php echo(isset($ac_key)?'?ac_key='.$ac_key :''); ?>">リクエスト登録</a></li>
+        <li><a href="<?=$_ENV['URL_MASTER_REQUEST']?>">リクエスト登録</a></li>
         <li><a href="<?=$_ENV['URL_USER_INDEX']?>">フィギュア一覧</a></li>
+        <li><a href="<?=$_ENV['URL_MASTER_LOGIN']?>">ログアウト</a></li>
     </ul>
 </div>
 

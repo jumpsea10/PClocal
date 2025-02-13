@@ -1,19 +1,23 @@
 <?php
-include_once("./inc/login_head.inc");
 session_start();
-$mail = $_POST["mail"];
-$rst = mysql_query("select * from user where mail = '{$mail}'");
-if(!mysqli_num_rows($rst)){
-    header('Location: login.php');
+include_once("/var/www/html/inc/function.inc");
+unset($_SESSION['user_ac_key']);
+if (isset($_POST['mail'])) {
+    $mail = mysqli_real_escape_string($con,$_POST['mail']);
+}
+$rst = mysql_query("SELECT * FROM user WHERE mail = '{$mail}'");
+if ($rst->num_rows <= 0) {
+    header('Location: '. $_ENV['URL_USER_LOGIN']);
     $_SESSION['login_error']='*このメールアドレスはまだ登録されていません。';
     exit();
 }
-extract(mysqli_fetch_assoc($rst));
-if(password_verify($_POST["password"],$pwd_hash)){
-    header("Location: http://localhost:8080/index.php?ac_key=".$ac_key);
+$col = mysqli_fetch_assoc($rst);
+if (password_verify($_POST["password"],$col['pwd_hash'])) {
+    $_SESSION['user_ac_key'] = $col['user_ac_key'];
+    header("Location: ". $_ENV['URL_USER_INDEX']);
     exit();
-}else{
-    header('Location: login.php');
+} else {
+    header('Location: '. $_ENV['URL_USER_LOGIN']);
     $_SESSION['login_error']='*パスワードが間違っています。';
     exit();
 }

@@ -1,10 +1,12 @@
 <?php
+session_start();
 include_once("inc/head.inc");
 $is_exist = 0;
-if (isset($_GET['ac_key'])) {
-    $ac_key = mysqli_real_escape_string($con,$_GET['ac_key']);
-    $rst = mysql_query("select * from user where ac_key = $ac_key");
-    if ($usr = mysqli_fetch_assoc($rst)) {
+if (isset($_SESSION['user_ac_key'])) {
+    $ac_key = $_SESSION['user_ac_key'];
+    $rst = mysql_query("SELECT * FROM user WHERE user_ac_key = '$ac_key'");
+    if ($rst->num_rows > 0) {
+        $usr = mysqli_fetch_assoc($rst);
         $is_exist = 1;
     }
 }
@@ -16,7 +18,7 @@ if (isset($_POST['request'])) {
     $anime = isset($_POST['anime_name']) ? mysqli_real_escape_string($con, $_POST['anime_name']) : '';
     $maker = isset($_POST['maker_name']) ? mysqli_real_escape_string($con, $_POST['maker_name']) : '';
     $memo = isset($_POST['memo']) ? mysqli_real_escape_string($con, $_POST['memo']) : '';    
-    mysql_query("insert into figure_request (name,anime,maker,memo) values ('$name','$anime','$maker','$memo')");
+    mysql_query("INSERT INTO figure_request (name,anime,maker,memo) VALUES ('$name','$anime','$maker','$memo')");
 }
 
 ?>
@@ -28,18 +30,23 @@ if (isset($_POST['request'])) {
     ☰
     </div>
     <ul>
-        <li><a href="<?=$_ENV['URL_USER_INDEX']?><?php echo(isset($ac_key)?'?ac_key='.$ac_key :''); ?>">フィギュア一覧</a></li>
-        <li><a href="<?=$_ENV['URL_USER_REQUEST']?><?php echo(isset($ac_key)?'?ac_key='.$ac_key :''); ?>">リクエスト</a></li>
+        <li><a href="<?=$_ENV['URL_USER_INDEX']?>">フィギュア一覧</a></li>
         <?php if ($is_exist === 0) { ?>
         <li><a href="<?=$_ENV['URL_USER_LOGIN']?>">ログイン</a></li>
-        <?php } else if($is_exist === 1) { ?>
-        <li><a href="<?=$_ENV['URL_USER_FAVORITE']?><?php echo(isset($ac_key)?'?ac_key='.$ac_key :''); ?>">お気に入り一覧</a></li>
+        <?php } else if ($is_exist === 1) { ?>
+        <li><a href="<?=$_ENV['URL_USER_FAVORITE']?>">お気に入り一覧</a></li>
+        <li><a href="<?=$_ENV['URL_USER_LOGIN']?>">ログアウト</a></li>
         <?php } ?>
     </ul>
 </div>
 
 <div class="content" id="content">
         <h1 id="top">リクエスト</h1>
+        <?php if ($is_exist == 1) { ?>
+            <p style="color: green; font-size: 17px;">ログインユーザです。</p>
+        <?php } else { ?>
+            <p style="color: green; font-size: 17px;">ゲストユーザです。</p>
+        <?php } ?>
         <p style="display: <?php echo( $is_request === 1 ? 'block':'none');?>; color:darkcyan">
             *リクエストが送信されました。
         </p>

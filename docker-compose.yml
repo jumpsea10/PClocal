@@ -1,39 +1,38 @@
-
 services:
   web:
     build:
       context: ./docker/web
       dockerfile: Dockerfile
-    container_name: ffweb
+    container_name: PCweb
     ports:
       - "8080:80"
     volumes:
       - ./html:/var/www/html
-      - ./secret:/var/www/inc
+      - ./.env:/var/www/.env
     depends_on:
       - db
     networks:
-      - ffnetwork
+      - PCnetwork
+    env_file:
+      - .env
 
   db:
-    build:
-      context: ./docker/db
-      dockerfile: Dockerfile
-    container_name: ffdb
+    image: mysql:5.7
+    container_name: PCdb
     ports:
       - "3306:3306"
     environment:
-      MYSQL_ROOT_PASSWORD: ff_root
-      MYSQL_DATABASE: ffdb
+      MYSQL_ROOT_PASSWORD: pc_root
+      MYSQL_DATABASE: pcdb
       MYSQL_USER: user
       MYSQL_PASSWORD: user_password
     command:
       - "--character-set-server=utf8mb4"
       - "--collation-server=utf8mb4_unicode_ci"
     volumes:
-      - ffdb:/var/lib/mysql
+      - PCdb:/var/lib/mysql
     networks:
-      - ffnetwork
+      - PCnetwork
 
   phpmyadmin:
     build:
@@ -45,14 +44,15 @@ services:
     environment:
       PMA_HOST: db
       PMA_PORT: 3306
-      MYSQL_ROOT_PASSWORD: ff_root
+      MYSQL_ROOT_PASSWORD: pc_root
     depends_on:
       - db
     networks:
-      - ffnetwork
+      - PCnetwork
 
 volumes:
-  ffdb:
+  PCdb:
 
 networks:
-  ffnetwork:
+  PCnetwork:
+

@@ -1,11 +1,12 @@
 <?php
+session_start();
 include_once("inc/head.inc");
 $is_exist = 0;
-$is_favorite = 1;
-if (isset($_GET['ac_key'])) {
-    $ac_key = mysqli_real_escape_string($con,$_GET['ac_key']);
-    $rst = mysql_query("select * from user where ac_key = $ac_key");
-    if ($usr = mysqli_fetch_assoc($rst)) {
+if (isset($_SESSION['user_ac_key'])) {
+    $ac_key = $_SESSION['user_ac_key'];
+    $rst = mysql_query("SELECT * FROM user WHERE user_ac_key = '$ac_key'");
+    if ($rst->num_rows > 0) {
+        $usr = mysqli_fetch_assoc($rst);
         $is_exist = 1;
     }
 }
@@ -14,11 +15,11 @@ if (isset($_GET['ac_key'])) {
 if (isset($_POST["fav_usr"])) {
     $fav_usr = mysqli_real_escape_string($con,$_POST['fav_usr']);
     $fav_figure = mysqli_real_escape_string($con,$_POST['fav_figure']);
-    mysql_query("delete from user_favorite where user_id = $fav_usr and figure_id = $fav_figure");
-    $rst = mysql_query("select * from figure where figure_id=$fav_figure");
+    mysql_query("DELETE FROM user_favorite WHERE user_id = $fav_usr AND figure_id = $fav_figure");
+    $rst = mysql_query("SELECT * FROM figure WHERE figure_id = $fav_figure");
     $col = mysqli_fetch_assoc($rst);
     $new_favorite = $col["favorite"]-1;
-    mysql_query("update figure set favorite = '{$new_favorite}' where figure_id = $fav_figure");
+    mysql_query("UPDATE figure SET favorite = '{$new_favorite}' WHERE figure_id = $fav_figure");
     
 }
 
@@ -40,14 +41,14 @@ if (isset($_POST['sort'])) {
 
 //where句の作成
 $where = '1=1';
-$where .= !isset($_POST["anime_name"]) ? " AND anime LIKE '%" . mysqli_real_escape_string($con,$_POST["anime_name"]) . "%'" : '';
-$where .= !isset($_POST["figure_name"]) ? " AND name LIKE '%" . mysqli_real_escape_string($con,$_POST["figure_name"]) . "%'" : '';
-$where .= !isset($_POST["start_sale_date"]) ? " AND sale_date >= '" . mysqli_real_escape_string($con,$_POST["start_sale_date"]) . "'" : '';
-$where .= !isset($_POST["end_sale_date"]) ? " AND sale_date <= '" . mysqli_real_escape_string($con,$_POST["end_sale_date"]) . "'" : '';
-$where .= !isset($_POST["start_salling_price"]) ? " AND salling_price >= '" . mysqli_real_escape_string($con,$_POST["start_salling_price"]) . "'" : '';
-$where .= !isset($_POST["end_salling_price"]) ? " AND salling_price <= '" . mysqli_real_escape_string($con,$_POST["end_salling_price"]) . "'" : '';
-$where .= !isset($_POST["start_buying_price"]) ? " AND buying_price >= '" . mysqli_real_escape_string($con,$_POST["start_buying_price"]) . "'" : '';
-$where .= !isset($_POST["end_buying_price"]) ? " AND buying_price <= '" . mysqli_real_escape_string($con,$_POST["end_buying_price"]) . "'" : '';
+$where .= isset($_POST["anime_name"]) ? " AND anime LIKE '%" . mysqli_real_escape_string($con,$_POST["anime_name"]) . "%'" : '';
+$where .= isset($_POST["figure_name"]) ? " AND name LIKE '%" . mysqli_real_escape_string($con,$_POST["figure_name"]) . "%'" : '';
+$where .= isset($_POST["start_sale_date"]) ? " AND sale_date >= '" . mysqli_real_escape_string($con,$_POST["start_sale_date"]) . "'" : '';
+$where .= isset($_POST["end_sale_date"]) ? " AND sale_date <= '" . mysqli_real_escape_string($con,$_POST["end_sale_date"]) . "'" : '';
+$where .= isset($_POST["start_salling_price"]) ? " AND salling_price >= '" . mysqli_real_escape_string($con,$_POST["start_salling_price"]) . "'" : '';
+$where .= isset($_POST["end_salling_price"]) ? " AND salling_price <= '" . mysqli_real_escape_string($con,$_POST["end_salling_price"]) . "'" : '';
+$where .= isset($_POST["start_buying_price"]) ? " AND buying_price >= '" . mysqli_real_escape_string($con,$_POST["start_buying_price"]) . "'" : '';
+$where .= isset($_POST["end_buying_price"]) ? " AND buying_price <= '" . mysqli_real_escape_string($con,$_POST["end_buying_price"]) . "'" : '';
 
 $nowpage = 1;
 $offset = ($nowpage-1)*20;
@@ -55,7 +56,7 @@ if (isset($_POST["page"])) {
     $offset = ($_POST['page']-1)*20;
     $nowpage = $_POST['page'];
 }
-$figures_query = "SELECT * FROM user_favorite left join figure on figure.figure_id = user_favorite.figure_id WHERE $where ORDER BY $order_by limit 20 offset $offset";
+$figures_query = "SELECT * FROM user_favorite LEFT JOIN figure ON figure.figure_id = user_favorite.figure_id WHERE $where ORDER BY $order_by LIMIT 20 offset $offset";
 $figures_result = mysql_query($figures_query);
 
 $max_pages = mysqli_num_rows($figures_result)/20+1;
@@ -69,13 +70,19 @@ $max_pages = mysqli_num_rows($figures_result)/20+1;
     ☰
     </div>
     <ul>
-        <li><a href="<?=$_ENV['URL_USER_INDEX']?><?php echo(isset($ac_key)?'?ac_key='.$ac_key :''); ?>">フィギュア一覧</a></li>
-        <li><a href="<?=$_ENV['URL_USER_REQUEST']?><?php echo(isset($ac_key)?'?ac_key='.$ac_key :''); ?>">リクエスト</a></li>
+        <li><a href="<?=$_ENV['URL_USER_INDEX']?>">フィギュア一覧</a></li>
+        <li><a href="<?=$_ENV['URL_USER_REQUEST']?>">リクエスト</a></li>
+        <li><a href="<?=$_ENV['URL_USER_LOGIN']?>">ログアウト</a></li>
     </ul>
 </div>
     <!-- メインコンテンツ -->
     <div class="content" id="content">
         <h1 id="top">お気に入り一覧</h1>
+        <?php if ($is_exist == 1) { ?>
+            <p style="color: green; font-size: 17px;">ログインユーザです。</p>
+        <?php } else { ?>
+            <p style="color: green; font-size: 17px;">ゲストユーザです。</p>
+        <?php } ?>
         
         <div class="liner_str">
             <a id="search_condition">検索条件を表示/非表示</a>
@@ -152,9 +159,9 @@ $max_pages = mysqli_num_rows($figures_result)/20+1;
                 <div class="Element_vertical">
                 <label>お気に入り数: <span><?=$col["favorite"]?></span></label>
                 <?php
-                $rst = mysql_query("select * from user_favorite where user_id = '{$usr["user_id"]}' and figure_id = '{$col["figure_id"]}'");
+                $rst = mysql_query("SELECT * FROM user_favorite WHERE user_id = '{$usr["user_id"]}' AND figure_id = '{$col["figure_id"]}'");
                 $is_favorite = mysqli_num_rows($rst)? 1: 0; 
-                if ($is_favorite==1) {  ?>            
+                if ($is_favorite == 1) {  ?>            
                     <form action="" method="POST" class="favorite-form">
                         <input type="hidden" name="fav_usr" value="<?=$usr["user_id"]?>">
                         <input type="hidden" name="fav_figure" value="<?=$col["figure_id"]?>">

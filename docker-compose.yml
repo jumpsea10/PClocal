@@ -17,7 +17,9 @@ services:
       - .env
 
   db:
-    image: mysql:5.7
+    build:
+      context: ./docker/web
+      dockerfile: Dockerfile
     container_name: PCdb
     ports:
       - "3306:3306"
